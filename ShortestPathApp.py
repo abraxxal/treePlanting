@@ -2,6 +2,7 @@ from cmu_112_graphics import *
 from PIL import Image
 from tkinter import *
 from campus_map import *
+import shortestPath as sp
 
 class ShortestPathApp(App):
     def appStarted(app):
@@ -14,31 +15,21 @@ class ShortestPathApp(App):
         app.pathColor = "red"
         app.pathWidth = 10
         app.map = createGraph()
-        
-        #ShortestPath stores a list of node objects
-        app.shortestPath = app.getPath()
+        app.shortestPath = []
 
-    ##############################################
-    #             Change the keys here           #
-    ##############################################
-    def getPath(app):
-        # This is a sample list of locations
-        return [app.map.nodes['scobell'],
-                app.map.nodes['resnik'],
-                app.map.nodes['west wing'],
-                app.map.nodes['uc south'],
-                app.map.nodes['doherty entrance'],
-                app.map.nodes['doherty'],
-                app.map.nodes['wean'],
-                app.map.nodes['nsh'],
-                app.map.nodes['hamburg'],
-                app.map.nodes['tepper'],
-                app.map.nodes['hillman'],
-                app.map.nodes['gates'],
-                app.map.nodes['ecg west'],
-                app.map.nodes['aepi'],
-                ]
-        #app.shortestPathKeys = Jennifer's algorithm(input)
+    def userInput(app):
+        str1 = input("Please type in your starting location:")
+        str2 = input("Please type in your ending location:")
+        node1 = app.map.nodes[str1]
+        node2 = app.map.nodes[str2]
+        return (node1, node2)
+
+    ###################################
+    #    Calls Jennifer's Function    #
+    ###################################
+    def getShortestPath(app, inputs):
+        print(sp.getShortestPath(app.map, inputs[0], inputs[1]))
+        return sp.getShortestPath(app.map, inputs[0], inputs[1])
 
     def getBackground(app):
         url = "https://i.imgur.com/Js6Yr8T.png"
@@ -48,18 +39,15 @@ class ShortestPathApp(App):
         app.bgX = app.width / 2 + 30
         app.bgY = app.width / 2
 
-    def mousePressed(app, event):
-        app.scrollLocation = (event.x, event.y)
-        
-        app.dotList.append(Dot(event.x, event.y))
-        app.coordList.append((event.x, event.y))
-
     def keyPressed(app, event):
         if(event.key == "f" and len(app.dotList) > 0):
             app.dotList.pop()
             app.coordList.pop()
         elif(event.key == "r"):
             print(app.coordList)
+        elif(event.key == "e"):
+            app.userInputTuple = app.userInput()
+            app.shortestPath = app.getShortestPath(app.userInputTuple)
 
     def drawBG(app, canvas):
         canvas.create_image(app.bgX,
