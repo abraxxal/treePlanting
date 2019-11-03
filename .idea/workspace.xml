@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ca5a3077-e15e-491c-b26c-0c5e7f59de28" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/campus_map.py" beforeDir="false" afterPath="$PROJECT_DIR$/campus_map.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ShortestPathApp.py" beforeDir="false" afterPath="$PROJECT_DIR$/ShortestPathApp.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -20,12 +20,6 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="373" />
-    <option name="y" value="-16" />
-    <option name="width" value="974" />
-    <option name="height" value="1047" />
   </component>
   <component name="ProjectId" id="1T71C7DVfbGUzpKf06mKMc7xIrk" />
   <component name="PropertiesComponent">
