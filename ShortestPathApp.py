@@ -7,9 +7,9 @@ import shortestPath as sp
 
 class ShortestPathApp(App):
     def appStarted(app):
-        app.scrollX = 200
-        app.scrollY = 300
-        app.scaleFactor = 2  # Modify this to change the default scaling
+        app.scrollX = 0
+        app.scrollY = 0
+        app.scaleFactor = 1  # Modify this to change the default scaling
         app.getBackground()
         app.timerDelay = 20
         app.getBackground()
@@ -121,13 +121,13 @@ class ShortestPathApp(App):
         elif 40 < x < 300 and 140 < y < 170:
             if app.start is not None and app.end is not None:
                 app.shortestPath = sp.getShortestPath(app.map, app.start, app.end)
-                app.start = None
-                app.end = None
+                #app.start = None
+                #app.end = None
         elif 40 < x < 300 and 180 < y < 210:
             if app.start is not None and app.end is not None:
                 app.shortestPath = sp.getShortestPath(app.map, app.start, app.end)
-                app.start = None
-                app.end = None
+                #app.start = None
+                #app.end = None
 
         for node in app.map.nodes.values():
             targetX = node.x
@@ -141,34 +141,34 @@ class ShortestPathApp(App):
                     app.selectingEnd = False
 
     def drawRoutingScreen(app, canvas):
-        canvas.create_rectangle(20, 20, 320, 230, fill="SteelBlue1")
-        canvas.create_text(32, 60, text="From:", font="Helvetica 16 bold", anchor="w")
+        canvas.create_rectangle(20, 20, 320, 215, fill="red3", width = 0)
+        canvas.create_text(32, 60, text="From:", font="Helvetica 16 bold", anchor="w", fill = "white")
 
-        canvas.create_rectangle(100, 45, 300, 75, fill="powder blue")
+        canvas.create_rectangle(100, 45, 300, 75, fill="gray27", width = 0)
         startText = "Click to set start!"
-        color = "SlateGray3"
+        color = "cyan2"
         if app.start is not None:
             startText = app.start.name
-            color = "SlateGray4"
+            color = "white"
         elif app.selectingStart:
             startText = "Click on a location!"
         canvas.create_text(110, 60, text=startText, font="Helvetica 13", anchor="w", fill=color)
 
-        canvas.create_text(35, 100, text="    To:", font="Helvetica 16 bold", anchor="w")
-        canvas.create_rectangle(100, 85, 300, 115, fill="powder blue")
+        canvas.create_text(35, 100, text="    To:", font="Helvetica 16 bold", anchor="w", fill="white")
+        canvas.create_rectangle(100, 85, 300, 115, fill="gray27", width=0)
         endText = "Click to set destination!"
-        color = "SlateGray3"
+        color = "cyan2"
         if app.end is not None:
             endText = app.end.name
-            color = "SlateGray4"
+            color = "white"
         elif app.selectingEnd:
             endText = "Click on a location!"
         canvas.create_text(110, 100, text=endText, font="Helvetica 13", anchor="w", fill=color)
 
-        canvas.create_rectangle(40, 140, 300, 170, fill="LightGoldenrod1")
-        canvas.create_text(170, 155, text="Route for shortest distance", font="Helvetica 14 ")
-        canvas.create_rectangle(40, 180, 300, 210, fill="LightGoldenrod1")
-        canvas.create_text(170, 195, text="Route for least time outside", font="Helvetica 14 ")
+        canvas.create_rectangle(40, 130, 300, 160, fill="cyan4", width=0)
+        canvas.create_text(170, 145, text="Route for shortest distance", font="Helvetica 13 bold", fill="white")
+        canvas.create_rectangle(40, 170, 300, 200, fill="cyan4", width=0)
+        canvas.create_text(170, 185, text="Route for least time outside", font="Helvetica 13 bold", fill="white")
 
     def redrawAll(app, canvas):
         app.drawBG(canvas)
