@@ -150,7 +150,7 @@ class ShortestPathApp(App):
                     app.end = node
                     app.selectingEnd = False
         
-        def mouseMoved(app, event):
+    def mouseMoved(app, event):
         for node in app.map.nodes.values():
             if (app.distance(event.x, event.y, 
                 node.x*app.scaleFactor-app.scrollX, 
