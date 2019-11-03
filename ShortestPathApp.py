@@ -17,6 +17,7 @@ class ShortestPathApp(App):
         # Defaults for the nodes
         app.defaultNodeColor = "deep sky blue"
         app.pathColor = "red"
+        app.selectedColor = "DarkOrange1"
         app.pathWidth = 10
         app.map = createGraph()
         app.shortestPath = []
@@ -27,10 +28,6 @@ class ShortestPathApp(App):
         app.selectingEnd = False
         app.start = None
         app.end = None
-
-        # Test drawings
-        app.userInputTuple = (app.map.nodes['doherty'], app.map.nodes['mudge'])
-        app.shortestPath = app.getShortestPath(app.userInputTuple)
 
         # mouse hovering
         app.currentNode = None
@@ -73,10 +70,6 @@ class ShortestPathApp(App):
             app.scroll(0, -50)
         elif (event.key == 'Down'):
             app.scroll(0, 50)
-            # Prompts imput for testing
-        elif (event.key == 't'):
-            app.userInputTuple = app.userInput()
-            app.shortestPath = app.getShortestPath(app.userInputTuple)
     
     def distance(app, x1, y1, x2, y2):
         return ((x1-x2)**2 + (y1-y2)**2)**0.5
@@ -116,6 +109,10 @@ class ShortestPathApp(App):
     def drawNodes(app, canvas):
         for key in app.map.nodes:
             app.drawSingleNode(canvas, app.map.nodes[key], app.defaultNodeColor)
+        if(app.start != None):
+            app.drawSingleNode(canvas, app.start, app.selectedColor)
+        if(app.end != None):
+            app.drawSingleNode(canvas, app.end, app.selectedColor)
 
     def drawSingleNode(app, canvas, node, color):
         x = node.x * app.scaleFactor - app.scrollX
@@ -136,13 +133,9 @@ class ShortestPathApp(App):
         elif 40 < x < 300 and 140 < y < 170:
             if app.start is not None and app.end is not None:
                 app.shortestPath = sp.getShortestPath(app.map, app.start, app.end)
-                #app.start = None
-                #app.end = None
         elif 40 < x < 300 and 180 < y < 210:
             if app.start is not None and app.end is not None:
-                app.shortestPath = sp.getShortestPath(app.map, app.start, app.end)
-                #app.start = None
-                #app.end = None
+                app.shortestPath = sp.getShortestPathIndoors(app.map, app.start, app.end)
 
         for node in app.map.nodes.values():
             targetX = node.x

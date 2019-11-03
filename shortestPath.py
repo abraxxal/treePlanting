@@ -64,7 +64,7 @@ def getShortestPath(graph, startNode, endNode):
 
 def getShortestPathIndoors(graph, startNode, endNode):
     # wrapper function for shortestPathIndoors
-    return [startNode] + shortestPathIndoors(graph, startNode, endNode, True)
+    return [startNode] + shortestPath(graph, startNode, endNode, True)
 
 def distanceValues(lst, distances):
     # returns list of distances given a list of nodes
