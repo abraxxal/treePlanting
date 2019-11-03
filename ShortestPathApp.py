@@ -102,11 +102,7 @@ class ShortestPathApp(App):
                             dot.x + dot.r, dot.y + dot.r,
                             fill = dot.color)'''
         
-        #for i in range(len(app.pathKeys) - 1):
-        #    app.drawPath(canvas, app.pathKeys[i], app.pathKeys[i+1])
-
-        app.drawNodes(canvas)
-    
+        
     def drawBG(app, canvas):
         canvas.create_image(app.bgX,
                             app.bgY,
