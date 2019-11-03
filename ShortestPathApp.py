@@ -4,12 +4,13 @@ from tkinter import *
 from campus_map import *
 import shortestPath as sp
 
+
 class ShortestPathApp(App):
     def appStarted(app):
         app.getBackground()
-        #app.scrollX = 0
-        #app.scrollY = 0
-        #app.scrollLocation = (0, 0) code used once for scrolling
+        # app.scrollX = 0
+        # app.scrollY = 0
+        # app.scrollLocation = (0, 0) code used once for scrolling
         app.timerDelay = 20
         app.defaultNodeColor = "deep sky blue"
         app.pathColor = "red"
@@ -22,11 +23,10 @@ class ShortestPathApp(App):
         app.start = None
         app.end = None
 
-        #Test drawings
+        # Test drawings
         app.userInputTuple = (app.map.nodes['doherty'], app.map.nodes['mudge'])
         app.shortestPath = app.getShortestPath(app.userInputTuple)
 
-    
     def userInput(app):
         str1 = input("Please type in your starting location:")
         str2 = input("Please type in your ending location:")
@@ -55,16 +55,14 @@ class ShortestPathApp(App):
         app.userInputTuple = app.userInput()
         app.shortestPath = app.getShortestPath(app.userInputTuple)
 
-
-
     def drawBG(app, canvas):
         canvas.create_image(app.bgX,
                             app.bgY,
-                            image = ImageTk.PhotoImage(app.image))
+                            image=ImageTk.PhotoImage(app.image))
 
     def drawPath(app, canvas):
         for i in range(len(app.shortestPath) - 1):
-            app.drawSegment(canvas, app.shortestPath[i], app.shortestPath[i+1])
+            app.drawSegment(canvas, app.shortestPath[i], app.shortestPath[i + 1])
         for j in range(len(app.shortestPath)):
             app.drawSingleNode(canvas, app.shortestPath[j], app.pathColor)
 
@@ -72,20 +70,20 @@ class ShortestPathApp(App):
         x1, y1 = node1.x, node1.y
         x2, y2 = node2.x, node2.y
         canvas.create_line(x1, y1, x2, y2,
-                           fill = app.pathColor,
-                           width = app.pathWidth)
-    
+                           fill=app.pathColor,
+                           width=app.pathWidth)
+
     def drawNodes(app, canvas):
         for key in app.map.nodes:
             app.drawSingleNode(canvas, app.map.nodes[key], app.defaultNodeColor)
 
     def drawSingleNode(app, canvas, node, color):
-            x = node.x 
-            y = node.y
-            canvas.create_oval(x - app.r, y - app.r,
-                               x + app.r, y + app.r,
-                               fill = color,
-                               width = 0)
+        x = node.x
+        y = node.y
+        canvas.create_oval(x - app.r, y - app.r,
+                           x + app.r, y + app.r,
+                           fill=color,
+                           width=0)
 
     def mousePressed(app, event):
         x, y = event.x, event.y
@@ -116,8 +114,6 @@ class ShortestPathApp(App):
                 elif app.selectingEnd:
                     app.end = node
                     app.selectingEnd = False
-
-
 
     def drawRoutingScreen(app, canvas):
         canvas.create_rectangle(20, 20, 320, 230, fill="SteelBlue1")
@@ -154,5 +150,6 @@ class ShortestPathApp(App):
         app.drawNodes(canvas)
         app.drawPath(canvas)
         app.drawRoutingScreen(canvas)
+
 
 app = ShortestPathApp(width=800, height=800)
