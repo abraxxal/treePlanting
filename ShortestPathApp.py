@@ -1,22 +1,24 @@
 from cmu_112_graphics import *
 from PIL import Image
 from tkinter import *
+from campus_map import *
 
 class ShortestPathApp(App):
     def appStarted(app):
         #app.graph = GraphCreator.createGraph()
         app.getBackground()
-        app.scrollX = 0
-        app.scrollY = 0
-        app.scrollLocation = (0, 0)
+        #app.scrollX = 0
+        #app.scrollY = 0
+        #app.scrollLocation = (0, 0)
         app.timerDelay = 20
-        app.dotList = []
-        app.coordList = []
+        #app.dotList = []
+        #app.coordList = []
         app.pathColor = "red2"
         app.pathWidth = 10
         
-        app.setPathKey()
-        app.locationsDict = {
+        #ShortestPath stores a list of node objects
+        app.shortestPath = app.getPath
+        #app.locationsDict = {
             "mudge": (439, 61),
             "stever":(444, 134),
             "morewood":(402, 246),
@@ -65,8 +67,9 @@ class ShortestPathApp(App):
     ##############################################
     #             Change the keys here           #
     ##############################################
-    def setPathKey(app, keys = ["morewood", "etower", "wts", "purnell"]):
-        app.pathKeys = keys
+    def getPath(app):
+        return ["morewood", "etower", "wts", "purnell", "scobell"]
+        #app.shortestPathKeys = Jennifer's algorithm(input)
 
     def getBackground(app):
         url = "https://i.imgur.com/Js6Yr8T.png"
@@ -90,23 +93,28 @@ class ShortestPathApp(App):
             print(app.coordList)
 
     def redrawAll(app, canvas):
-        canvas.create_image(app.bgX - app.scrollX,
-                            app.bgY - app.scrollY,
-                            image = ImageTk.PhotoImage(app.image))
+        app.drawBG(canvas)
+        app.drawPath(canvas)
+        app.drawNodes(canvas)
 
-        for dot in app.dotList:
+        '''for dot in app.dotList:
             canvas.create_oval(dot.x - dot.r, dot.y - dot.r,
                             dot.x + dot.r, dot.y + dot.r,
-                            fill = dot.color)
+                            fill = dot.color)'''
         
-        for i in range(len(app.pathKeys) - 1):
-            app.drawPath(canvas, app.pathKeys[i], app.pathKeys[i+1])
+        
+    def drawBG(app, canvas):
+        canvas.create_image(app.bgX,
+                            app.bgY,
+                            image = ImageTk.PhotoImage(app.image))
 
-        app.drawNodes(canvas)
-    
-    def drawPath(app, canvas, node1, node2):
-        x1, y1 = app.locationsDict[node1]
-        x2, y2 = app.locationsDict[node2]
+    def drawPath(app, canvas):
+        for i in range(len(app.pathKeys) - 1):
+            app.drawSegment(canvas, app.pathKeys[i], app.pathKeys[i+1])
+
+    def drawSegment(app, canvas, node1, node2):
+        x1, y1 = node1.x, node1.y
+        x2, y2 = node2.x, node2.y
         canvas.create_line(x1, y1, x2, y2,
                            fill = app.pathColor,
                            width = app.pathWidth)
