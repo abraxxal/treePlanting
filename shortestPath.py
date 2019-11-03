@@ -1,4 +1,7 @@
 import math
+import campus_map
+
+cmuMap = campus_map.createGraph()
 
 def Dijkstra(graph, startNode):
     # returns dictionary of key-value pairs node-distance realtive to starting 
@@ -43,8 +46,8 @@ def shortestPath(graph, startNode, endNode):
             # that neighbor using Dijkstra's
             # Pick the next node based on this calculation
             directDistance = currentNode.getWeight(neighbor)
-            pathDistances = Dijkstra(graph, neighbor)
-            if (directDistance + pathDistances[endNode] == distances[end]):
+            neighborDistances = Dijkstra(graph, neighbor)
+            if (directDistance + neighborDistances[endNode] == distances[endNode]):
                 nxtNode = neighbor
                 break
         # append the next node to path, and then call shortestPath on the last 
@@ -54,7 +57,11 @@ def shortestPath(graph, startNode, endNode):
 
 def getShortestPath(graph, startNode, endNode):
     # wrapper function for shortestPath
-    return [startNode] + shortestPath(graph, startNode, endNode)
+    startPoint = startNode.name
+    path = shortestPath(graph, startNode, endNode)
+    for i in range(len(path)):
+        path[i] = path[i].name
+    return [startPoint] + path
 
 def distanceValues(lst, distances):
     # returns list of distances given a list of nodes
