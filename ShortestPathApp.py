@@ -5,70 +5,39 @@ from campus_map import *
 
 class ShortestPathApp(App):
     def appStarted(app):
-        #app.graph = GraphCreator.createGraph()
         app.getBackground()
         #app.scrollX = 0
         #app.scrollY = 0
-        #app.scrollLocation = (0, 0)
+        #app.scrollLocation = (0, 0) code used once for scrolling
         app.timerDelay = 20
-        #app.dotList = []
-        #app.coordList = []
-        app.pathColor = "red2"
+        app.defaultNodeColor = "deep sky blue"
+        app.pathColor = "red"
         app.pathWidth = 10
+        app.map = createGraph()
         
         #ShortestPath stores a list of node objects
-        app.shortestPath = app.getPath
-        #app.locationsDict = {
-            "mudge": (439, 61),
-            "stever":(444, 134),
-            "morewood":(402, 246),
-            "etower":(384, 287),
-            "tepper": (252, 291),
-            "hamburg":(204, 355),
-            "nsh": (192, 425),
-            "gates": (268, 422),
-            "hillman": (285, 377),
-            "cyert": (333, 341),
-            "wts": (408, 350),
-            "purnell": (352, 453),
-            "doherty entrance": (334, 553),
-            "doherty": (251, 530),
-            "wean": (166, 510),
-            "scott": (116, 499),
-            "hamerschlag hall": (122, 553),
-            "west mall": (156, 562),
-            "east mall": (320, 605),
-            "scaife": (56, 609),
-            "schenley": (100, 657),
-            "porter": (138, 617),
-            "baker": (227, 634),
-            "baker entrance": (299, 659),
-            "hunt": (346, 657),
-            "cfa": (386, 625),
-            "fence" : (398, 571),
-            "donner": (627, 598),
-            "scobell": (676, 615),
-            "resnik": (647, 541),
-            "west wing": (568, 520),
-            "uc south": (447, 492),
-            "uc west": (447, 402),
-            "uc east": (525, 453),
-            "uc north": (472, 351),
-            "aepi": (427, 288),
-            "ecg east": (547, 354),
-            "ecg west": (725, 404)
-            }
-
-    #app.nodes
-    #node in app.nodes
-    #node.x
-    #node.y
+        app.shortestPath = app.getPath()
 
     ##############################################
     #             Change the keys here           #
     ##############################################
     def getPath(app):
-        return ["morewood", "etower", "wts", "purnell", "scobell"]
+        # This is a sample list of locations
+        return [app.map.nodes['scobell'],
+                app.map.nodes['resnik'],
+                app.map.nodes['west wing'],
+                app.map.nodes['uc south'],
+                app.map.nodes['doherty entrance'],
+                app.map.nodes['doherty'],
+                app.map.nodes['wean'],
+                app.map.nodes['nsh'],
+                app.map.nodes['hamburg'],
+                app.map.nodes['tepper'],
+                app.map.nodes['hillman'],
+                app.map.nodes['gates'],
+                app.map.nodes['ecg west'],
+                app.map.nodes['aepi'],
+                ]
         #app.shortestPathKeys = Jennifer's algorithm(input)
 
     def getBackground(app):
@@ -92,25 +61,16 @@ class ShortestPathApp(App):
         elif(event.key == "r"):
             print(app.coordList)
 
-    def redrawAll(app, canvas):
-        app.drawBG(canvas)
-        app.drawPath(canvas)
-        app.drawNodes(canvas)
-
-        '''for dot in app.dotList:
-            canvas.create_oval(dot.x - dot.r, dot.y - dot.r,
-                            dot.x + dot.r, dot.y + dot.r,
-                            fill = dot.color)'''
-        
-        
     def drawBG(app, canvas):
         canvas.create_image(app.bgX,
                             app.bgY,
                             image = ImageTk.PhotoImage(app.image))
 
     def drawPath(app, canvas):
-        for i in range(len(app.pathKeys) - 1):
-            app.drawSegment(canvas, app.pathKeys[i], app.pathKeys[i+1])
+        for i in range(len(app.shortestPath) - 1):
+            app.drawSegment(canvas, app.shortestPath[i], app.shortestPath[i+1])
+        for j in range(len(app.shortestPath)):
+            app.drawSingleNode(canvas, app.shortestPath[j], app.pathColor)
 
     def drawSegment(app, canvas, node1, node2):
         x1, y1 = node1.x, node1.y
@@ -120,11 +80,20 @@ class ShortestPathApp(App):
                            width = app.pathWidth)
     
     def drawNodes(app, canvas):
-        for key in app.locationsDict:
-            x, y = app.locationsDict[key]
+        for key in app.map.nodes:
+            app.drawSingleNode(canvas, app.map.nodes[key], app.defaultNodeColor)
+
+    def drawSingleNode(app, canvas, node, color):
+            x = node.x 
+            y = node.y
             canvas.create_oval(x - 8, y - 8,
                                x + 8, y + 8,
-                               fill = app.pathColor,
+                               fill = color,
                                width = 0)
+
+    def redrawAll(app, canvas):
+        app.drawBG(canvas)
+        app.drawNodes(canvas)
+        app.drawPath(canvas)
 
 app = ShortestPathApp(width=800, height=800)
