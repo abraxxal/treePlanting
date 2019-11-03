@@ -17,6 +17,10 @@ class ShortestPathApp(App):
         app.map = createGraph()
         app.shortestPath = []
         app.r = 8
+        app.selectingStart = False
+        app.selectingEnd = False
+        app.start = None
+        app.end = None
 
         #Test drawings
         app.userInputTuple = (app.map.nodes['doherty'], app.map.nodes['mudge'])
@@ -51,6 +55,8 @@ class ShortestPathApp(App):
         app.userInputTuple = app.userInput()
         app.shortestPath = app.getShortestPath(app.userInputTuple)
 
+
+
     def drawBG(app, canvas):
         canvas.create_image(app.bgX,
                             app.bgY,
@@ -81,9 +87,72 @@ class ShortestPathApp(App):
                                fill = color,
                                width = 0)
 
+    def mousePressed(app, event):
+        x, y = event.x, event.y
+        if 100 < x < 300 and 45 < y < 75:
+            app.selectingStart = True
+            app.selectingEnd = False
+        elif 100 < x < 300 and 85 < y < 115:
+            app.selectingStart = False
+            app.selectingEnd = True
+        elif 40 < x < 300 and 140 < y < 170:
+            if app.start is not None and app.end is not None:
+                app.shortestPath = sp.getShortestPath(app.map, app.start, app.end)
+                app.start = None
+                app.end = None
+        elif 40 < x < 300 and 180 < y < 210:
+            if app.start is not None and app.end is not None:
+                app.shortestPath = sp.getShortestPath(app.map, app.start, app.end)
+                app.start = None
+                app.end = None
+
+        for node in app.map.nodes.values():
+            targetX = node.x
+            targetY = node.y
+            if abs(x - targetX) <= app.r and abs(y - targetY) <= app.r:
+                if app.selectingStart:
+                    app.start = node
+                    app.selectingStart = False
+                elif app.selectingEnd:
+                    app.end = node
+                    app.selectingEnd = False
+
+
+
+    def drawRoutingScreen(app, canvas):
+        canvas.create_rectangle(20, 20, 320, 230, fill="SteelBlue1")
+        canvas.create_text(32, 60, text="From:", font="Helvetica 16 bold", anchor="w")
+
+        canvas.create_rectangle(100, 45, 300, 75, fill="powder blue")
+        startText = "Click to set start!"
+        color = "SlateGray3"
+        if app.start is not None:
+            startText = app.start.name
+            color = "SlateGray4"
+        elif app.selectingStart:
+            startText = "Click on a location!"
+        canvas.create_text(110, 60, text=startText, font="Helvetica 13", anchor="w", fill=color)
+
+        canvas.create_text(35, 100, text="    To:", font="Helvetica 16 bold", anchor="w")
+        canvas.create_rectangle(100, 85, 300, 115, fill="powder blue")
+        endText = "Click to set destination!"
+        color = "SlateGray3"
+        if app.end is not None:
+            endText = app.end.name
+            color = "SlateGray4"
+        elif app.selectingEnd:
+            endText = "Click on a location!"
+        canvas.create_text(110, 100, text=endText, font="Helvetica 13", anchor="w", fill=color)
+
+        canvas.create_rectangle(40, 140, 300, 170, fill="LightGoldenrod1")
+        canvas.create_text(170, 155, text="Route for shortest distance", font="Helvetica 14 ")
+        canvas.create_rectangle(40, 180, 300, 210, fill="LightGoldenrod1")
+        canvas.create_text(170, 195, text="Route for least time outside", font="Helvetica 14 ")
+
     def redrawAll(app, canvas):
         app.drawBG(canvas)
         app.drawNodes(canvas)
         app.drawPath(canvas)
+        app.drawRoutingScreen(canvas)
 
 app = ShortestPathApp(width=800, height=800)

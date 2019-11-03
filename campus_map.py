@@ -147,7 +147,7 @@ def createGraph():
 
     # connect scs quad + walking to the sky
     cmuGraph.addEdge('scs quad entrance', ['hamburg', 'hillman', 'cyert'], [8, 6, 8], [10, 10, 10])
-    cmuGraph.addEdge('cyert', ['wts', 'hillman'], [17, 15], [10, 5])
+    cmuGraph.addEdge('cyert', ['wts', 'hillman'], [17, 10], [10, 5])
     cmuGraph.addEdge('wts', ['purnell', 'uc west', 'uc north'], [25, 10, 18], [10, 10, 10])
     cmuGraph.addEdge('hillman', ['gates'], [12], [2])
     cmuGraph.addEdge('gates', ['nsh', 'purnell'], [14, 20], [3, 10])
