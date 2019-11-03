@@ -18,6 +18,9 @@ class Node(object):
             return self.adjacent[other]
         return None
 
+    def __eq__(self, other):
+        return isinstance(other, Node) and self.name == other.name
+
     def __hash__(self):
         return hash(self.name)
 
@@ -198,7 +201,8 @@ def createGraph():
 
     return cmuGraph
 
-map = createGraph()
-print(map)
+def testGraph():
+    map = createGraph()
+    print(map)
 
 
