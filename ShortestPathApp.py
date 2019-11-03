@@ -32,20 +32,13 @@ class ShortestPathApp(App):
         app.userInputTuple = (app.map.nodes['doherty'], app.map.nodes['mudge'])
         app.shortestPath = app.getShortestPath(app.userInputTuple)
 
-    def userInput(app):
-        str1 = input("Please type in your starting location:")
-        str2 = input("Please type in your ending location:")
-        node1 = app.map.nodes[str1]
-        node2 = app.map.nodes[str2]
-        return (node1, node2)
-
     ###################################
     #    Calls Jennifer's Function    #
     ###################################
     def getShortestPath(app, inputs):
         nodes = sp.getShortestPath(app.map, inputs[0], inputs[1])
-        for node in nodes:
-            print(node.name, node.x, node.y)
+        # for node in nodes:
+        #     print(node.name, node.x, node.y)
         return sp.getShortestPath(app.map, inputs[0], inputs[1])
 
     def getBackground(app):
