@@ -4,6 +4,8 @@
     <list default="true" id="ca5a3077-e15e-491c-b26c-0c5e7f59de28" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ShortestPathApp.py" beforeDir="false" afterPath="$PROJECT_DIR$/ShortestPathApp.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/campus_map.py" beforeDir="false" afterPath="$PROJECT_DIR$/campus_map.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shortestPath.py" beforeDir="false" afterPath="$PROJECT_DIR$/shortestPath.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

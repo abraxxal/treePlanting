@@ -135,7 +135,7 @@ class ShortestPathApp(App):
                 app.shortestPath = sp.getShortestPath(app.map, app.start, app.end)
         elif 40 < x < 300 and 180 < y < 210:
             if app.start is not None and app.end is not None:
-                app.shortestPath = sp.getShortestPathIndoors(app.map, app.start, app.end)
+                app.shortestPath = sp.getShortestPath(app.map, app.start, app.end)
 
         for node in app.map.nodes.values():
             targetX = node.x
@@ -165,7 +165,7 @@ class ShortestPathApp(App):
 
         canvas.create_rectangle(100, 45, 300, 75, fill="gray27", width = 0)
         startText = "Click to set start!"
-        color = "cyan2"
+        color = "gray75"
         if app.start is not None:
             startText = app.start.name
             color = "white"
@@ -176,7 +176,7 @@ class ShortestPathApp(App):
         canvas.create_text(35, 100, text="    To:", font="Helvetica 16 bold", anchor="w", fill="white")
         canvas.create_rectangle(100, 85, 300, 115, fill="gray27", width=0)
         endText = "Click to set destination!"
-        color = "cyan2"
+        color = "gray75"
         if app.end is not None:
             endText = app.end.name
             color = "white"

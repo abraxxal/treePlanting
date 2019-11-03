@@ -22,9 +22,9 @@ class Node(object):
         return None
 
     # returns distances but weighted by indoors/outdoors
-    def getWeatherDistance(self, other):
+    def getDistanceIndoors(self, other):
         if other in self.distances:
-            return self.distances[other] * (self.exposure[other] ** 0.5)
+            return self.distances[other] * (self.exposure[other] ** 0.5) // 1
         print(f"No connection between {self.name} and {other.name}!")
         return None
 
@@ -43,7 +43,7 @@ class Node(object):
     def __repr__(self):
         return f'Node: {self.name}\n' \
                f'Neighbors: {[node.name for node in self.getConnections()]}\n' \
-               f'Weighted Distances: {[self.getWeatherDistance(node) for node in self.getConnections()]}\n'
+               f'Weighted Distances: {[self.getDistanceIndoors(node) for node in self.getConnections()]}\n'
 
 
 class Graph(object):
@@ -146,7 +146,8 @@ def createGraph():
     cmuGraph.addEdge('AEPi', ['Walking to the Sky'], [25], [10])
 
     # connect SCS Quad + walking to the sky
-    cmuGraph.addEdge('SCS Quad Entrance', ['Hamburg Hall', 'Hillman Center', 'Cyert Hall', 'Newell-Simon Center'], [24, 25, 31, 45], [10, 6, 5, 10])
+    cmuGraph.addEdge('SCS Quad Entrance', ['Hamburg Hall', 'Hillman Center', 'Cyert Hall', 'Newell-Simon Center'],
+                     [24, 25, 31, 45], [10, 6, 5, 10])
     cmuGraph.addEdge('Cyert Hall', ['Walking to the Sky', 'Hillman Center'], [29, 22], [10, 5])
     cmuGraph.addEdge('Walking to the Sky', ['Purnell Center', 'UC West', 'UC North'], [43, 26, 30], [10, 10, 10])
     cmuGraph.addEdge('Hillman Center', ['Gates Center'], [19], [2])
@@ -155,8 +156,10 @@ def createGraph():
     cmuGraph.addEdge('Purnell Center', ['Doherty Hall Entrance', 'The Fence', 'UC Southwest'], [39, 49, 31], [10, 10, 10])
 
     # connect everything east of the UC
-    cmuGraph.addEdge('UC Southwest', ['UC South', 'Doherty Hall Entrance', 'The Fence'], [9, 43, 32], [2, 10, 10])
-    cmuGraph.addEdge('UC Center', ['UC West', 'UC East', 'UC South', 'UC North'], [8, 23, 24, 31], [1, 1, 1, 1])
+    cmuGraph.addEdge('UC Southwest', ['UC South', 'Doherty Hall Entrance', 'The Fence', 'Purnell Center'],
+                     [9, 31, 43, 32], [10, 2, 10, 10])
+    cmuGraph.addEdge('UC Center', ['UC West', 'UC East', 'UC South', 'UC North', 'UC Southwest'],
+                     [8, 23, 24, 31, 25], [1, 1, 1, 1, 1])
     cmuGraph.addEdge('UC North', ['ECG West', 'UC West'], [26, 25], [1, 1])
     cmuGraph.addEdge('UC West', ['UC Southwest'], [35], [10])
     cmuGraph.addEdge('ECG West', ['ECG East', 'UC East'], [61, 39], [1, 8])
@@ -165,7 +168,8 @@ def createGraph():
     cmuGraph.addEdge('UC South', ['Margret Morrison North'], [29], [10])
     cmuGraph.addEdge('West Wing', ['Resnik Hall'], [31], [3])
     cmuGraph.addEdge('Resnik Hall', ['Donner House', 'Scobell, Happiest Place on Earth'], [22, 30], [10, 10])
-    cmuGraph.addEdge('Donner House', ['Scobell, Happiest Place on Earth', 'Margret Morrison South'], [19, 43], [10, 10])
+    cmuGraph.addEdge('Donner House', ['Scobell, Happiest Place on Earth', 'Margret Morrison South'],
+                     [19, 43], [10, 10])
     cmuGraph.addEdge('Scobell, Happiest Place on Earth', ['Margret Morrison South'], [27], [10])
     cmuGraph.addEdge('Margret Morrison North', ['Margret Morrison South', 'West Wing'], [57, 12], [1, 10])
     cmuGraph.addEdge('The Fence', ['Margret Morrison South', 'CFA Building'], [47, 24], [10, 10])
@@ -215,7 +219,7 @@ def createGraph():
         "CFA Building": (386, 625),
         "The Fence": (398, 571),
         "Donner House": (627, 598),
-        "Scobell, Happiest Place on Earth": (676, 615),
+        "Scobell, Happiest Place on Earth": (676, 650),
         "Resnik Hall": (647, 541),
         "West Wing": (568, 520),
         "UC South": (450, 492),

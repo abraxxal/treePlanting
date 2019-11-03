@@ -35,7 +35,7 @@ def Dijkstra(graph, startNode, indoors):
 def shortestPath(graph, startNode, endNode, indoors):
     # finds shortest path recursively by calling Dijkstra's 
     if (startNode == endNode):
-        return []
+        return [endNode]
     else:
         path = []
         currentNode = startNode
