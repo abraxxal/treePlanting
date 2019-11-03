@@ -86,7 +86,7 @@ class ShortestPathApp(App):
 ########################################
     
     def drawInfoBox(app, canvas):
-        canvas.create_rectangle(app.width//2-110, app.height-75, app.width//2+110, 
+        canvas.create_rectangle(app.width//2-200, app.height-75, app.width//2+200, 
                                 app.height-25, fill="red3", width=0)
     
     def drawBuildingName(app, canvas):
@@ -201,8 +201,8 @@ class ShortestPathApp(App):
         app.drawNodes(canvas)
         app.drawPath(canvas)
         app.drawRoutingScreen(canvas)
-        app.drawInfoBox(canvas)
         if (app.hovering):
+            app.drawInfoBox(canvas)
             app.drawBuildingName(canvas)
 
 
