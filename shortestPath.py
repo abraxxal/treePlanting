@@ -57,11 +57,7 @@ def shortestPath(graph, startNode, endNode):
 
 def getShortestPath(graph, startNode, endNode):
     # wrapper function for shortestPath
-    startPoint = startNode.name
-    path = shortestPath(graph, startNode, endNode)
-    for i in range(len(path)):
-        path[i] = path[i].name
-    return [startPoint] + path
+    return [startNode] + shortestPath(graph, startNode, endNode)
 
 def distanceValues(lst, distances):
     # returns list of distances given a list of nodes
