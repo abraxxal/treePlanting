@@ -7,17 +7,22 @@ import shortestPath as sp
 
 class ShortestPathApp(App):
     def appStarted(app):
+        app.scrollX = 200
+        app.scrollY = 300
+        app.scaleFactor = 2  # Modify this to change the default scaling
         app.getBackground()
-        # app.scrollX = 0
-        # app.scrollY = 0
-        # app.scrollLocation = (0, 0) code used once for scrolling
         app.timerDelay = 20
+        app.getBackground()
+
+        # Defaults for the nodes
         app.defaultNodeColor = "deep sky blue"
         app.pathColor = "red"
         app.pathWidth = 10
         app.map = createGraph()
         app.shortestPath = []
         app.r = 8
+
+        # Defaults for the interface
         app.selectingStart = False
         app.selectingEnd = False
         app.start = None
@@ -44,20 +49,45 @@ class ShortestPathApp(App):
         return sp.getShortestPath(app.map, inputs[0], inputs[1])
 
     def getBackground(app):
-        url = "https://i.imgur.com/Js6Yr8T.png"
+        url = "https://i.imgur.com/WapEwR6.jpg"
         app.image = app.loadImage(url)
-        app.image = app.image.resize((866, 800))
+        app.image = app.scaleImage(app.image, app.scaleFactor / 4)
 
-        app.bgX = app.width / 2 + 30
-        app.bgY = app.width / 2
+        app.bgX = app.image.width * 1 / 2
+        app.bgY = app.image.height * 1 / 2
+
+    # Changes the scrollx and scrolly
+    def scroll(app, dx, dy):
+        app.scrollX += dx
+        app.scrollY += dy
+        if (app.scrollX > app.image.width - 800 or
+                app.scrollY > app.image.height - 800 or
+                app.scrollX < 0 or
+                app.scrollY < 0):
+            app.scrollX -= dx
+            app.scrollY -= dy
 
     def keyPressed(app, event):
-        app.userInputTuple = app.userInput()
-        app.shortestPath = app.getShortestPath(app.userInputTuple)
+        if (event.key == 'Left'):
+            app.scroll(-50, 0)
+        elif (event.key == 'Right'):
+            app.scroll(50, 0)
+        elif (event.key == 'Up'):
+            app.scroll(0, -50)
+        elif (event.key == 'Down'):
+            app.scroll(0, 50)
+            # Prompts imput for testing
+        elif (event.key == 't'):
+            app.userInputTuple = app.userInput()
+            app.shortestPath = app.getShortestPath(app.userInputTuple)
+
+########################################
+# Drawing Functions                    #
+########################################
 
     def drawBG(app, canvas):
-        canvas.create_image(app.bgX,
-                            app.bgY,
+        canvas.create_image(app.bgX - app.scrollX,
+                            app.bgY - app.scrollY,
                             image=ImageTk.PhotoImage(app.image))
 
     def drawPath(app, canvas):
@@ -67,8 +97,10 @@ class ShortestPathApp(App):
             app.drawSingleNode(canvas, app.shortestPath[j], app.pathColor)
 
     def drawSegment(app, canvas, node1, node2):
-        x1, y1 = node1.x, node1.y
-        x2, y2 = node2.x, node2.y
+        x1 = node1.x * app.scaleFactor - app.scrollX
+        y1 = node1.y * app.scaleFactor - app.scrollY
+        x2 = node2.x * app.scaleFactor - app.scrollX
+        y2 = node2.y * app.scaleFactor - app.scrollY
         canvas.create_line(x1, y1, x2, y2,
                            fill=app.pathColor,
                            width=app.pathWidth)
@@ -78,8 +110,8 @@ class ShortestPathApp(App):
             app.drawSingleNode(canvas, app.map.nodes[key], app.defaultNodeColor)
 
     def drawSingleNode(app, canvas, node, color):
-        x = node.x
-        y = node.y
+        x = node.x * app.scaleFactor - app.scrollX
+        y = node.y * app.scaleFactor - app.scrollY
         canvas.create_oval(x - app.r, y - app.r,
                            x + app.r, y + app.r,
                            fill=color,
