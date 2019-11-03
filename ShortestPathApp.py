@@ -86,12 +86,12 @@ class ShortestPathApp(App):
 ########################################
     
     def drawInfoBox(app, canvas):
-        canvas.create_rectangle(app.width-150, 0, app.width, 25, fill="red3",
-                                width=5)
+        canvas.create_rectangle(app.width//2-110, app.height-75, app.width//2+110, 
+                                app.height-25, fill="red3", width=0)
     
     def drawBuildingName(app, canvas):
-        canvas.create_text(app.width-75, 15, text=f"{app.currentNode.name}", 
-                           fill="black")
+        canvas.create_text(app.width//2, app.height-50, text=f"{app.currentNode.name.upper()}", 
+                           font="Helvetica 20", fill="white")
 
     def drawBG(app, canvas):
         canvas.create_image(app.bgX - app.scrollX,
