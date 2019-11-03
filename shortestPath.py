@@ -24,7 +24,7 @@ def Dijkstra(graph, startNode):
         # they're still in the queue
         for neighbor in node.getConnections():
             if (neighbor in queue):
-                alt = dist[node] + node.getWeight(neighbor)
+                alt = dist[node] + node.getDistance(neighbor)
                 if (alt < dist[neighbor]):
                     dist[neighbor] = alt
     return dist
@@ -45,7 +45,7 @@ def shortestPath(graph, startNode, endNode):
             # calculate distance to next node and distance to end node from 
             # that neighbor using Dijkstra's
             # Pick the next node based on this calculation
-            directDistance = currentNode.getWeight(neighbor)
+            directDistance = currentNode.getDistance(neighbor)
             neighborDistances = Dijkstra(graph, neighbor)
             if (directDistance + neighborDistances[endNode] == distances[endNode]):
                 nxtNode = neighbor
