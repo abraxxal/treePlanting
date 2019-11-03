@@ -73,10 +73,20 @@ class ShortestPathApp(App):
         elif (event.key == 't'):
             app.userInputTuple = app.userInput()
             app.shortestPath = app.getShortestPath(app.userInputTuple)
+    
+    def distance(app, x1, y1, x2, y2):
+        return ((x1-x2)**2 + (y1-y2)**2)**0.5
 
 ########################################
 # Drawing Functions                    #
 ########################################
+    
+    def drawInfoBox(app, canvas):
+        canvas.create_rectangle(app.width-150, 0, app.width, 100, fill="white")
+    
+    def drawBuildingName(app, canvas):
+        canvas.create_text(app.width-75, 15, text=f"{app.currentNode.name}", 
+                           fill="black")
 
     def drawBG(app, canvas):
         canvas.create_image(app.bgX - app.scrollX,
@@ -139,6 +149,17 @@ class ShortestPathApp(App):
                 elif app.selectingEnd:
                     app.end = node
                     app.selectingEnd = False
+        
+        def mouseMoved(app, event):
+        for node in app.map.nodes.values():
+            if (app.distance(event.x, event.y, 
+                node.x*app.scaleFactor-app.scrollX, 
+                node.y*app.scaleFactor-app.scrollY) < 20):
+                app.currentNode = node
+                app.hovering = True
+                break
+            else:
+                app.hovering = False
 
     def drawRoutingScreen(app, canvas):
         canvas.create_rectangle(20, 20, 320, 215, fill="red3", width = 0)
