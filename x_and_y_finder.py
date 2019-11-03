@@ -4,6 +4,12 @@ from tkinter import *
 from campus_map import *
 import shortestPath as sp
 
+class Dot(object):
+    def __init__(self, x, y, name):
+        self.x = x
+        self.y = y
+        self.name = name
+
 class ShortestPathApp(App):
     def appStarted(app):
         app.getBackground()
@@ -16,6 +22,7 @@ class ShortestPathApp(App):
         app.pathWidth = 10
         app.map = createGraph()
         app.shortestPath = []
+        app.dotList = []
 
     def userInput(app):
         str1 = input("Please type in your starting location:")
@@ -41,9 +48,19 @@ class ShortestPathApp(App):
         app.bgX = app.width / 2 + 30
         app.bgY = app.width / 2
 
+    def mousePressed(app, event):
+        name = input("This node represents:")
+        app.dotList.append(Dot(event.x, event.y, name))
+
     def keyPressed(app, event):
-        app.userInputTuple = app.userInput()
-        app.shortestPath = app.getShortestPath(app.userInputTuple)
+        if(event.key == "f" and len(app.dotList) > 0):
+            app.dotList.pop()
+        elif(event.key == "r"):
+            for dot in app.dotList:
+                print(f"Name: {dot.name} X:{dot.x} Y:{dot.y}")
+        else:
+            app.userInputTuple = app.userInput()
+            app.shortestPath = app.getShortestPath(app.userInputTuple)
 
     def drawBG(app, canvas):
         canvas.create_image(app.bgX,
@@ -79,5 +96,12 @@ class ShortestPathApp(App):
         app.drawBG(canvas)
         app.drawNodes(canvas)
         app.drawPath(canvas)
+        app.drawDots(canvas)
+
+    def drawDots(app, canvas):
+        for dot in app.dotList:
+            canvas.create_oval(dot.x - 10, dot.y - 10,
+                                dot.x + 10, dot.y + 10,
+                                fill = "green2", width = 0)
 
 app = ShortestPathApp(width=800, height=800)

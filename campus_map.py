@@ -195,6 +195,8 @@ def createGraph():
         "aepi": (427, 288),
         "ecg east": (547, 354),
         "ecg west": (725, 404),
+        "maggie mo north": (524, 511),
+        "maggie mo south": (516, 611)
     }
     for key, value in locationsDict.items():
         cmuGraph.addCoordinates(key, value[0], value[1])
