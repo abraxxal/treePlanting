@@ -23,6 +23,8 @@ class ShortestPathApp(App):
         #Test drawings
         app.userInputTuple = (app.map.nodes['doherty'], app.map.nodes['mudge'])
         app.shortestPath = app.getShortestPath(app.userInputTuple)
+        app.hovering = False
+        app.currentNode = None
 
     def userInput(app):
         str1 = input("Please type in your starting location:")
@@ -67,6 +69,51 @@ class ShortestPathApp(App):
         canvas.create_image(app.bgX - app.scrollX,
                             app.bgY - app.scrollY,
                             image = ImageTk.PhotoImage(app.image))
+    
+    def distance(app, x1, y1, x2, y2):
+        return ((x1-x2)**2 + (y1-y2)**2)**0.5
+
+    def mouseMoved(app, event):
+        '''
+        print(event.x, event.y)
+        for node in app.map.nodes.values():
+            x = node.x * app.scaleFactor - app.scrollX 
+            y = node.y * app.scaleFactor - app.scrollY
+            if app.distance(event.x, event.y, x, y) < 2*app.r:
+                app.currentNode = node
+                app.hovering = True
+            else:
+                app.hovering = False
+        '''
+        '''
+        node = app.map.getNode("aepi")
+        x = node.x * app.scaleFactor - app.scrollX
+        y = node.y * app.scaleFactor - app.scrollY
+        if app.distance(event.x, event.y, x, y) < app.r:
+            app.currentNode = node
+            app.hovering = True
+        else:
+            app.hovering = False
+        '''
+        for node in app.map.nodes.values():
+            if (app.distance(event.x, event.y, 
+                node.x*app.scaleFactor-app.scrollX, 
+                node.y*app.scaleFactor-app.scrollY) < 20):
+                print("akljdhfs")
+                app.currentNode = node
+                app.hovering = True
+                break
+            else:
+                app.hovering = False
+                print(":(")
+
+    def drawInfoBox(app, canvas):
+        canvas.create_rectangle(app.width-150, 0, app.width, 100, fill="white")
+    
+    def drawBuildingName(app, canvas):
+        canvas.create_text(app.width-75, 15, text=f"{app.currentNode.name}", 
+                           fill="black")
+    
 
     def drawPath(app, canvas):
         for i in range(len(app.shortestPath) - 1):
@@ -99,6 +146,10 @@ class ShortestPathApp(App):
         app.drawBG(canvas)
         app.drawNodes(canvas)
         app.drawPath(canvas)
+        app.drawInfoBox(canvas)
+        if (app.hovering):
+            print("REEEEE")
+            app.drawBuildingName(canvas)
         #canvas.create_rectangle(400,400,250,300, fill = "black")
 
 app = ShortestPathApp(width=800, height=800)
