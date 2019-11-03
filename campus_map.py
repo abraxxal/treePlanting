@@ -4,6 +4,8 @@ class Node(object):
     def __init__(self, name):
         self.name = name
         self.adjacent = dict()
+        self.x = 0
+        self.y = 0
 
     def addAdjacent(self, adjacentNode, distance):
         self.adjacent[adjacentNode] = distance
@@ -40,6 +42,10 @@ class Graph(object):
         for i, node2 in enumerate(otherNodes):
             self.nodes[node1].addAdjacent(self.nodes[node2], distances[i])
             self.nodes[node2].addAdjacent(self.nodes[node1], distances[i])
+
+    def addCoordinates(self, node, x, y):
+        self.nodes[node].x = x
+        self.nodes[node].y = y
 
     def getNode(self, name):
         return self.nodes[name]
@@ -145,6 +151,50 @@ def createGraph():
     cmuGraph.addEdge('baker', ['baker entrance'])
     cmuGraph.addEdge('baker entrance', ['hunt'])
     cmuGraph.addEdge('hunt', ['cfa'])
+
+    # add canvas coordinates for all nodes
+    locationsDict = {
+        "mudge": (439, 61),
+        "stever": (444, 134),
+        "morewood": (402, 246),
+        "etower": (384, 287),
+        "tepper": (252, 291),
+        "hamburg": (204, 355),
+        "nsh": (192, 425),
+        "gates": (268, 422),
+        "hillman": (285, 377),
+        "cyert": (333, 341),
+        "wts": (408, 350),
+        "purnell": (352, 453),
+        "doherty entrance": (334, 553),
+        "doherty": (251, 530),
+        "wean": (166, 510),
+        "scott": (116, 499),
+        "hamerschlag hall": (122, 553),
+        "west mall": (156, 562),
+        "east mall": (320, 605),
+        "scaife": (56, 609),
+        "schenley": (100, 657),
+        "porter": (138, 617),
+        "baker": (227, 634),
+        "baker entrance": (299, 659),
+        "hunt": (346, 657),
+        "cfa": (386, 625),
+        "fence": (398, 571),
+        "donner": (627, 598),
+        "scobell": (676, 615),
+        "resnik": (647, 541),
+        "west wing": (568, 520),
+        "uc south": (447, 492),
+        "uc west": (447, 402),
+        "uc east": (525, 453),
+        "uc north": (472, 351),
+        "aepi": (427, 288),
+        "ecg east": (547, 354),
+        "ecg west": (725, 404),
+    }
+    for key, value in locationsDict.items():
+        cmuGraph.addCoordinates(key, value[0], value[1])
 
     return cmuGraph
 
