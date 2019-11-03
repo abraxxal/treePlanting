@@ -3,19 +3,29 @@ class Node(object):
     def __init__(self, name):
         self.name = name
         self.distances = dict()
+        self.exposure = dict()
         self.instructions = dict()
         self.x = 0
         self.y = 0
 
-    def addAdjacent(self, adjacentNode, distance):
+    def addAdjacent(self, adjacentNode, distance, exposure):
         self.distances[adjacentNode] = distance
+        self.exposure[adjacentNode] = exposure
 
     def getConnections(self):
         return self.distances.keys()
 
-    def getWeight(self, other):
+    def getDistance(self, other):
         if other in self.distances:
             return self.distances[other]
+        print(f"No connection between {self.name} and {other.name}!")
+        return None
+
+    # returns distances but weighted by indoors/outdoors
+    def getWeatherDistance(self, other):
+        if other in self.distances:
+            return self.distances[other] * (self.exposure[other] ** 0.5)
+        print(f"No connection between {self.name} and {other.name}!")
         return None
 
     def getInstructions(self, other):
@@ -45,12 +55,14 @@ class Graph(object):
         self.nodes[name] = Node(name)
 
     # takes in one node and a list of nodes to connect it to, as well as weights
-    def addEdge(self, node1, otherNodes, distances=None):
+    def addEdge(self, node1, otherNodes, distances=None, exposure=None):
         if distances is None:
             distances = [1] * len(otherNodes)
+        if exposure is None:
+            exposure = [1] * len(otherNodes)
         for i, node2 in enumerate(otherNodes):
-            self.nodes[node1].addAdjacent(self.nodes[node2], distances[i])
-            self.nodes[node2].addAdjacent(self.nodes[node1], distances[i])
+            self.nodes[node1].addAdjacent(self.nodes[node2], distances[i], exposure[i])
+            self.nodes[node2].addAdjacent(self.nodes[node1], distances[i], exposure[i])
 
     def addCoordinates(self, node, x, y):
         self.nodes[node].x = x
@@ -119,48 +131,47 @@ def createGraph():
     cmuGraph.addNode('scobell')
 
     # connect north campus
-    cmuGraph.addEdge('mudge', ['stever'], [15])
-    cmuGraph.addEdge('stever', ['morewood'], [17])
-    cmuGraph.addEdge('morewood', ['etower'], [18])
-    cmuGraph.addEdge('etower', ['tepper', 'aepi', 'cyert', 'wts'], [29, 9, 15, 12])
-    cmuGraph.addEdge('tepper', ['hamburg', 'hillman'], [14, 20])
-    cmuGraph.addEdge('aepi', ['wts'], [14])
+    cmuGraph.addEdge('mudge', ['stever'], [15], [10])
+    cmuGraph.addEdge('stever', ['morewood'], [17], [10])
+    cmuGraph.addEdge('morewood', ['etower'], [18], [10])
+    cmuGraph.addEdge('etower', ['tepper', 'aepi', 'cyert', 'wts'], [29, 9, 15, 12], [10, 10, 10, 10])
+    cmuGraph.addEdge('tepper', ['hamburg', 'hillman'], [14, 20], [10, 10])
+    cmuGraph.addEdge('aepi', ['wts'], [14], [10])
 
     # connect scs quad + walking to the sky
-    # cmuGraph.addEdge('hamburg', ['nsh'], [18])
-    cmuGraph.addEdge('cyert', ['wts', 'hillman'], [17, 15])
-    cmuGraph.addEdge('wts', ['purnell', 'uc east', 'uc north'], [25, 13, 18])
-    cmuGraph.addEdge('hillman', ['gates'], [12])
-    cmuGraph.addEdge('gates', ['nsh', 'purnell'], [14, 20])
-    cmuGraph.addEdge('nsh', ['wean'], )
-    cmuGraph.addEdge('purnell', ['doherty entrance', 'fence', 'uc south'])
+    cmuGraph.addEdge('cyert', ['wts', 'hillman'], [17, 15], [10, 5])
+    cmuGraph.addEdge('wts', ['purnell', 'uc west', 'uc north'], [25, 13, 18], [10, 10, 10])
+    cmuGraph.addEdge('hillman', ['gates'], [12], [2])
+    cmuGraph.addEdge('gates', ['nsh', 'purnell'], [14, 20], [3, 10])
+    cmuGraph.addEdge('nsh', ['wean'], [12], [1])
+    cmuGraph.addEdge('purnell', ['doherty entrance', 'fence', 'uc south'], [22, 27, 23], [10, 10, 10])
 
     # connect everything east of the UC
-    cmuGraph.addEdge('uc north', ['uc east', 'ecg east'])
-    cmuGraph.addEdge('ecg east', ['ecg west', 'uc west', 'uc east'])
-    cmuGraph.addEdge('ecg west', ['resnik'])
-    cmuGraph.addEdge('uc east', ['uc south', 'uc west'])
-    cmuGraph.addEdge('uc west', ['uc south'])
-    cmuGraph.addEdge('uc south', ['doherty entrance', 'fence', 'maggie mo north'])
-    cmuGraph.addEdge('west wing', ['resnik'])
-    cmuGraph.addEdge('resnik', ['donner', 'scobell', 'ecg west'])
-    cmuGraph.addEdge('donner', ['scobell', 'maggie mo south'])  # ***** new connection *****
-    cmuGraph.addEdge('scobell', ['maggie mo south'])
-    cmuGraph.addEdge('maggie mo north', ['maggie mo south', 'west wing'])
-    cmuGraph.addEdge('fence', ['maggie mo south', 'cfa'])
+    cmuGraph.addEdge('uc north', ['uc west', 'ecg east'], [17, 13], [1, 8])
+    cmuGraph.addEdge('ecg east', ['ecg west', 'uc east'], [31, 20], [1, 8])
+    cmuGraph.addEdge('ecg west', ['resnik'], [30], [10])
+    cmuGraph.addEdge('uc west', ['uc south', 'uc east'], [17, 19], [1, 1])
+    cmuGraph.addEdge('uc east', ['uc south', 'maggie mo north'], [15, 12], [1, 10])
+    cmuGraph.addEdge('uc south', ['doherty entrance', 'fence', 'maggie mo north'], [29, 22, 18], [10, 10, 10])
+    cmuGraph.addEdge('west wing', ['resnik'], [14], [3])
+    cmuGraph.addEdge('resnik', ['donner', 'scobell', 'ecg west'], [12, 25, 30], [10, 10, 10])
+    cmuGraph.addEdge('donner', ['scobell', 'maggie mo south'], [15, 27], [10, 10])
+    cmuGraph.addEdge('scobell', ['maggie mo south'], [27], [10])
+    cmuGraph.addEdge('maggie mo north', ['maggie mo south', 'west wing'], [22, 10], [1, 10])
+    cmuGraph.addEdge('fence', ['maggie mo south', 'cfa'], [23, 13], [10, 10])
 
     # connect the mall
-    cmuGraph.addEdge('wean', ['scott', 'doherty', 'west mall'])
-    cmuGraph.addEdge('doherty', ['doherty entrance', 'baker'])
-    cmuGraph.addEdge('doherty entrance', ['baker entrance', 'baker'])
-    cmuGraph.addEdge('hamerschlag hall', ['scott', 'west mall'])
-    cmuGraph.addEdge('west mall', ['porter', 'east mall'])
-    cmuGraph.addEdge('east mall', ['baker entrance'])
-    cmuGraph.addEdge('scaife', ['schenley', 'hamerschlag hall'])
-    cmuGraph.addEdge('porter', ['schenley', 'baker'])
-    cmuGraph.addEdge('baker', ['baker entrance'])
-    cmuGraph.addEdge('baker entrance', ['hunt'])
-    cmuGraph.addEdge('hunt', ['cfa'])
+    cmuGraph.addEdge('wean', ['scott', 'doherty', 'west mall'], [8, 18, 10], [3, 2, 6])
+    cmuGraph.addEdge('doherty', ['doherty entrance', 'baker'], [19, 23], [3, 10])
+    cmuGraph.addEdge('doherty entrance', ['east mall', 'baker'], [12, 30], [10, 10])
+    cmuGraph.addEdge('hamerschlag hall', ['scott', 'west mall'], [10, 10], [2, 8])
+    cmuGraph.addEdge('west mall', ['porter', 'east mall'], [11, 36], [10, 10])
+    cmuGraph.addEdge('east mall', ['baker entrance'], [10], [10])
+    cmuGraph.addEdge('scaife', ['schenley', 'hamerschlag hall'], [18, 13], [10, 2])
+    cmuGraph.addEdge('porter', ['schenley', 'baker'], [10, 19], [2, 1])
+    cmuGraph.addEdge('baker', ['baker entrance'], [18], [1])
+    cmuGraph.addEdge('baker entrance', ['hunt'], [8], [10])
+    cmuGraph.addEdge('hunt', ['cfa'], [11], [10])
 
     # add canvas coordinates for all nodes
     locationsDict = {
@@ -196,8 +207,8 @@ def createGraph():
         "resnik": (647, 541),
         "west wing": (568, 520),
         "uc south": (447, 492),
-        "uc west": (447, 402),
-        "uc east": (525, 453),
+        "uc east": (447, 402),
+        "uc west": (525, 453),
         "uc north": (472, 351),
         "aepi": (427, 288),
         "ecg east": (547, 354),
