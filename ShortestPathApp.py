@@ -16,7 +16,13 @@ class ShortestPathApp(App):
         app.pathWidth = 10
         app.map = createGraph()
         app.shortestPath = []
+        app.r = 8
 
+        #Test drawings
+        app.userInputTuple = (app.map.nodes['doherty'], app.map.nodes['mudge'])
+        app.shortestPath = app.getShortestPath(app.userInputTuple)
+
+    
     def userInput(app):
         str1 = input("Please type in your starting location:")
         str2 = input("Please type in your ending location:")
@@ -70,8 +76,8 @@ class ShortestPathApp(App):
     def drawSingleNode(app, canvas, node, color):
             x = node.x 
             y = node.y
-            canvas.create_oval(x - 8, y - 8,
-                               x + 8, y + 8,
+            canvas.create_oval(x - app.r, y - app.r,
+                               x + app.r, y + app.r,
                                fill = color,
                                width = 0)
 
