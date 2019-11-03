@@ -32,6 +32,10 @@ class ShortestPathApp(App):
         app.userInputTuple = (app.map.nodes['doherty'], app.map.nodes['mudge'])
         app.shortestPath = app.getShortestPath(app.userInputTuple)
 
+        # mouse hovering
+        app.currentNode = None
+        app.hovering = False
+
     ###################################
     #    Calls Jennifer's Function    #
     ###################################
@@ -82,7 +86,8 @@ class ShortestPathApp(App):
 ########################################
     
     def drawInfoBox(app, canvas):
-        canvas.create_rectangle(app.width-150, 0, app.width, 100, fill="white")
+        canvas.create_rectangle(app.width-150, 0, app.width, 25, fill="red3",
+                                width=5)
     
     def drawBuildingName(app, canvas):
         canvas.create_text(app.width-75, 15, text=f"{app.currentNode.name}", 
@@ -150,7 +155,7 @@ class ShortestPathApp(App):
                     app.end = node
                     app.selectingEnd = False
         
-        def mouseMoved(app, event):
+    def mouseMoved(app, event):
         for node in app.map.nodes.values():
             if (app.distance(event.x, event.y, 
                 node.x*app.scaleFactor-app.scrollX, 
@@ -196,6 +201,9 @@ class ShortestPathApp(App):
         app.drawNodes(canvas)
         app.drawPath(canvas)
         app.drawRoutingScreen(canvas)
+        app.drawInfoBox(canvas)
+        if (app.hovering):
+            app.drawBuildingName(canvas)
 
 
 app = ShortestPathApp(width=800, height=800)
