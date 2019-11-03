@@ -41,7 +41,9 @@ class Node(object):
         return hash(self.name)
 
     def __repr__(self):
-        return f'Node: {self.name}\nNeighbors: {[x.name for x in self.getConnections()]}\n'
+        return f'Node: {self.name}\n' \
+               f'Neighbors: {[node.name for node in self.getConnections()]}\n' \
+               f'Weighted Distances: {[self.getWeatherDistance(node) for node in self.getConnections()]}\n'
 
 
 class Graph(object):
@@ -88,6 +90,7 @@ def createGraph():
     cmuGraph.addNode('morewood')
     cmuGraph.addNode('stever')
     cmuGraph.addNode('tepper')
+    cmuGraph.addNode('tepper quad')
 
     # mid campus
     cmuGraph.addNode('hamburg')
@@ -102,6 +105,8 @@ def createGraph():
     cmuGraph.addNode('uc north')
     cmuGraph.addNode('uc west')
     cmuGraph.addNode('uc south')
+    cmuGraph.addNode('uc center')
+    cmuGraph.addNode('uc sw')
     cmuGraph.addNode('ecg east')
     cmuGraph.addNode('ecg west')
     cmuGraph.addNode('west wing')
@@ -126,6 +131,7 @@ def createGraph():
     cmuGraph.addNode('schenley')
     cmuGraph.addNode('east mall')
     cmuGraph.addNode('west mall')
+    cmuGraph.addNode('scs quad entrance')
 
     # hilly hilly
     cmuGraph.addNode('scobell')
@@ -134,31 +140,36 @@ def createGraph():
     cmuGraph.addEdge('mudge', ['stever'], [15], [10])
     cmuGraph.addEdge('stever', ['morewood'], [17], [10])
     cmuGraph.addEdge('morewood', ['etower'], [18], [10])
+    cmuGraph.addEdge('tepper', ['tepper quad', 'etower'], [4, 28], [10, 10])
     cmuGraph.addEdge('etower', ['tepper', 'aepi', 'cyert', 'wts'], [29, 9, 15, 12], [10, 10, 10, 10])
-    cmuGraph.addEdge('tepper', ['hamburg', 'hillman'], [14, 20], [10, 10])
+    cmuGraph.addEdge('tepper quad', ['scs quad entrance'], [5], [10])
     cmuGraph.addEdge('aepi', ['wts'], [14], [10])
 
     # connect scs quad + walking to the sky
+    cmuGraph.addEdge('scs quad entrance', ['hamburg', 'hillman', 'cyert'], [8, 6, 8], [10, 10, 10])
     cmuGraph.addEdge('cyert', ['wts', 'hillman'], [17, 15], [10, 5])
-    cmuGraph.addEdge('wts', ['purnell', 'uc west', 'uc north'], [25, 13, 18], [10, 10, 10])
+    cmuGraph.addEdge('wts', ['purnell', 'uc west', 'uc north'], [25, 10, 18], [10, 10, 10])
     cmuGraph.addEdge('hillman', ['gates'], [12], [2])
     cmuGraph.addEdge('gates', ['nsh', 'purnell'], [14, 20], [3, 10])
-    cmuGraph.addEdge('nsh', ['wean'], [12], [1])
-    cmuGraph.addEdge('purnell', ['doherty entrance', 'fence', 'uc south'], [22, 27, 23], [10, 10, 10])
+    cmuGraph.addEdge('nsh', ['wean'], [16], [1])
+    cmuGraph.addEdge('purnell', ['doherty entrance', 'fence'], [22, 29], [10, 10])
 
     # connect everything east of the UC
-    cmuGraph.addEdge('uc north', ['uc west', 'ecg east'], [17, 13], [1, 8])
-    cmuGraph.addEdge('ecg east', ['ecg west', 'uc east'], [31, 20], [1, 8])
-    cmuGraph.addEdge('ecg west', ['resnik'], [30], [10])
-    cmuGraph.addEdge('uc west', ['uc south', 'uc east'], [17, 19], [1, 1])
-    cmuGraph.addEdge('uc east', ['uc south', 'maggie mo north'], [15, 12], [1, 10])
-    cmuGraph.addEdge('uc south', ['doherty entrance', 'fence', 'maggie mo north'], [29, 22, 18], [10, 10, 10])
+    cmuGraph.addEdge('uc sw', ['uc south', 'doherty entrance', 'purnell', 'fence'], [2, 27, 20, 22])
+    cmuGraph.addEdge('uc center', ['uc west', 'uc east', 'uc south'], [4, 9, 4], [1, 1, 1])
+    cmuGraph.addEdge('uc north', ['ecg west', 'uc west'], [14, 6], [1, 1])
+    cmuGraph.addEdge('uc west', ['uc sw'], [7], [10])
+    cmuGraph.addEdge('ecg west', ['ecg east', 'uc east'], [31, 20], [1, 8])
+    cmuGraph.addEdge('ecg east', ['resnik'], [30], [10])
+    # cmuGraph.addEdge('uc west', ['uc south', 'uc east'], [17, 19], [1, 1])
+    cmuGraph.addEdge('uc east', ['maggie mo north'], [15], [1, 1])
+    cmuGraph.addEdge('uc south', ['uc sw', 'maggie mo north'], [4, 22], [10, 10])
     cmuGraph.addEdge('west wing', ['resnik'], [14], [3])
-    cmuGraph.addEdge('resnik', ['donner', 'scobell', 'ecg west'], [12, 25, 30], [10, 10, 10])
+    cmuGraph.addEdge('resnik', ['donner', 'scobell', 'ecg east'], [12, 25, 30], [10, 10, 10])
     cmuGraph.addEdge('donner', ['scobell', 'maggie mo south'], [15, 27], [10, 10])
     cmuGraph.addEdge('scobell', ['maggie mo south'], [27], [10])
     cmuGraph.addEdge('maggie mo north', ['maggie mo south', 'west wing'], [22, 10], [1, 10])
-    cmuGraph.addEdge('fence', ['maggie mo south', 'cfa'], [23, 13], [10, 10])
+    cmuGraph.addEdge('fence', ['maggie mo south', 'cfa'], [23, 16], [10, 10])
 
     # connect the mall
     cmuGraph.addEdge('wean', ['scott', 'doherty', 'west mall'], [8, 18, 10], [3, 2, 6])
@@ -177,10 +188,12 @@ def createGraph():
     locationsDict = {
         "mudge": (439, 61),
         "stever": (444, 134),
-        "morewood": (402, 246),
+        "morewood": (420, 216),
         "etower": (384, 287),
-        "tepper": (252, 291),
-        "hamburg": (204, 355),
+        "tepper": (240, 245),
+        "tepper quad": (252, 291),
+        "scs quad entrance": (254, 320),
+        "hamburg": (190, 325),
         "nsh": (192, 425),
         "gates": (268, 422),
         "hillman": (285, 377),
@@ -190,8 +203,8 @@ def createGraph():
         "doherty entrance": (334, 553),
         "doherty": (251, 530),
         "wean": (166, 510),
-        "scott": (116, 499),
-        "hamerschlag hall": (122, 553),
+        "scott": (100, 499),
+        "hamerschlag hall": (90, 553),
         "west mall": (156, 562),
         "east mall": (320, 605),
         "scaife": (56, 609),
@@ -206,13 +219,15 @@ def createGraph():
         "scobell": (676, 615),
         "resnik": (647, 541),
         "west wing": (568, 520),
-        "uc south": (447, 492),
-        "uc east": (447, 402),
-        "uc west": (525, 453),
-        "uc north": (472, 351),
+        "uc south": (450, 492),
+        "uc west": (447, 402),
+        "uc east": (525, 453),
+        "uc north": (490, 351),
+        "uc center": (470, 430),
+        "uc sw": (425, 490),
         "aepi": (427, 288),
-        "ecg east": (547, 354),
-        "ecg west": (725, 404),
+        "ecg west": (560, 354),
+        "ecg east": (725, 404),
         "maggie mo north": (524, 511),
         "maggie mo south": (516, 611)
     }
