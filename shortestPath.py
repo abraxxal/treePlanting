@@ -3,7 +3,7 @@ import campus_map
 
 cmuMap = campus_map.createGraph()
 
-def Dijkstra(graph, startNode):
+def Dijkstra(graph, startNode, indoors):
     # returns dictionary of key-value pairs node-distance realtive to starting 
     # node
     queue = []
@@ -24,12 +24,15 @@ def Dijkstra(graph, startNode):
         # they're still in the queue
         for neighbor in node.getConnections():
             if (neighbor in queue):
-                alt = dist[node] + node.getDistance(neighbor)
+                if (indoors):
+                    alt = dist[node] + node.getDistanceIndoors(neighbor)
+                else:
+                    alt = dist[node] + node.getDistance(neighbor)
                 if (alt < dist[neighbor]):
                     dist[neighbor] = alt
     return dist
 
-def shortestPath(graph, startNode, endNode):
+def shortestPath(graph, startNode, endNode, indoors):
     # finds shortest path recursively by calling Dijkstra's 
     if (startNode == endNode):
         return []
@@ -39,25 +42,29 @@ def shortestPath(graph, startNode, endNode):
         nxtNode = None
         # At each step, check shortest distance to every other node using 
         # Dijkstra's
-        distances = Dijkstra(graph, currentNode)
+        distances = Dijkstra(graph, currentNode, indoors)
         shortestDistance = distances[endNode]
         for neighbor in currentNode.getConnections():
             # calculate distance to next node and distance to end node from 
             # that neighbor using Dijkstra's
             # Pick the next node based on this calculation
             directDistance = currentNode.getDistance(neighbor)
-            neighborDistances = Dijkstra(graph, neighbor)
+            neighborDistances = Dijkstra(graph, neighbor, indoors)
             if (directDistance + neighborDistances[endNode] == distances[endNode]):
                 nxtNode = neighbor
                 break
         # append the next node to path, and then call shortestPath on the last 
         # node in the path
         path.append(neighbor)
-        return path + shortestPath(graph, path[-1], endNode)
+        return path + shortestPath(graph, path[-1], endNode, indoors)
 
 def getShortestPath(graph, startNode, endNode):
     # wrapper function for shortestPath
-    return [startNode] + shortestPath(graph, startNode, endNode)
+    return [startNode] + shortestPath(graph, startNode, endNode, False)
+
+def getShortestPathIndoors(graph, startNode, endNode):
+    # wrapper function for shortestPathIndoors
+    return [startNode] + shortestPathIndoors(graph, startNode, endNode, True)
 
 def distanceValues(lst, distances):
     # returns list of distances given a list of nodes
